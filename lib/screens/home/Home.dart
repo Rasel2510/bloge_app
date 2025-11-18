@@ -18,7 +18,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    postsFuture = api.getpost(page: 1, perPage: 10);
+    postsFuture = api.getpost(page: 1, perPage: 20);
   }
 
   @override

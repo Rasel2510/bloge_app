@@ -1,5 +1,6 @@
 import 'package:bloge/features/navigation/navigation.dart';
 import 'package:bloge/services/Api_service/api_singup.dart';
+import 'package:bloge/services/authservise/AuthService.dart';
 import 'package:bloge/widgets/elevated_button.dart';
 import 'package:bloge/widgets/textformfild.dart';
 import 'package:flutter/material.dart';
@@ -56,11 +57,13 @@ class _SingupState extends State<Singup> {
     try {
       setState(() => isLoading = true);
       final result = await api.singin(name, email, password, phon);
-      setState(() => isLoading = false);
 
       print("Signup successful: $result");
 
       if (result != null && result['success'] == true) {
+        final token = result['data']['token'];
+        AuthService.saveToken(token);
+
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (_) => Navigation()),
@@ -71,10 +74,11 @@ class _SingupState extends State<Singup> {
         );
       }
     } catch (e) {
-      setState(() => isLoading = false);
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text("Error: ${e.toString()}")));
+    } finally {
+      setState(() => isLoading = false);
     }
   }
 

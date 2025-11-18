@@ -2,20 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TextForm extends StatelessWidget {
-  final String hintText;
+  final String? hintText;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
+  final int? maxline;
 
   const TextForm({
     super.key,
-    required this.hintText,
+    this.hintText,
     this.controller,
     this.validator,
+    this.maxline,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      maxLines: maxline,
       style: TextStyle(color: Colors.white),
       controller: controller,
       validator: validator,

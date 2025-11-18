@@ -1,0 +1,152 @@
+import 'package:bloge/services/Api_service/update_user.dart';
+import 'package:bloge/widgets/elevated_button.dart';
+import 'package:bloge/widgets/textformfild.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+class EditProfile extends StatefulWidget {
+  final String name;
+  final String phone;
+  const EditProfile({super.key, required this.name, required this.phone});
+
+  @override
+  State<EditProfile> createState() => _EditProfileState();
+}
+
+class _EditProfileState extends State<EditProfile> {
+  final TextEditingController _name = TextEditingController();
+  final TextEditingController _phone = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _name.text = widget.name;
+    _phone.text = widget.phone;
+  }
+
+  Future<void> updatep() async {
+    final newname = _name.text.trim();
+    final newphone = _phone.text.trim();
+    if (newname.isEmpty || newphone.isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Enter Your Name and Email")));
+      return;
+    }
+    try {
+      final result = await UpdateUser().useprofile(newname, newphone);
+      if (result['success'] == true) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Update successfully"),
+            backgroundColor: Colors.green,
+          ),
+        );
+        Navigator.pop(context);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(result['message'] ?? "update failed"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Error:${e.toString()}")));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Color(0xFF121217),
+      appBar: AppBar(
+        elevation: 0,
+        foregroundColor: Colors.white,
+        backgroundColor: Color(0xFF121217),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back_ios),
+        ),
+        centerTitle: true,
+        title: Text('Edit Profile'),
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(20.r),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: CircleAvatar(
+                    radius: 70.r,
+                    backgroundColor: Color(0xFFE36527),
+                    child: Icon(Icons.person, color: Colors.white, size: 40.sp),
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                Center(
+                  child: Column(
+                    children: [
+                      Text(
+                        widget.name,
+                        style: TextStyle(fontSize: 22.sp, color: Colors.white),
+                      ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        widget.phone,
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          color: Color(0xFF9EA6BA),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 20.h),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Display Name',
+                      style: TextStyle(fontSize: 14.sp, color: Colors.white),
+                    ),
+                    SizedBox(height: 5.h),
+                    TextForm(controller: _name, hintText: "Enter your name"),
+                    SizedBox(height: 16.h),
+                    Text(
+                      'Phone',
+                      style: TextStyle(fontSize: 14.sp, color: Colors.white),
+                    ),
+                    SizedBox(height: 5.h),
+                    TextForm(controller: _phone, hintText: "Enter your email"),
+                    Text(
+                      'bio',
+                      style: TextStyle(fontSize: 14.sp, color: Colors.white),
+                    ),
+                    SizedBox(height: 5.h),
+                    TextForm(maxline: 3),
+                  ],
+                ),
+                SizedBox(height: 110.h),
+                CustomElevatedButton(
+                  text: 'Save Changes',
+                  onPressed: () {
+                    updatep();
+                  },
+                  fcolor: Colors.white,
+                  bcolor: Color(0xFFE36527),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

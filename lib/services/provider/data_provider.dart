@@ -4,17 +4,18 @@ import 'package:flutter/material.dart';
 
 class BookmarkP with ChangeNotifier {
   final Dbhelper _dbhelper = Dbhelper();
+
   List<DataModel> _bookmark = [];
+  List<DataModel> get bookmark => _bookmark;
+
   bool _isLoading = false;
   bool get isLoading => _isLoading;
-
-  List<DataModel> get bookmark => _bookmark;
 
   // load data
   Future<void> loadData() async {
     _isLoading = true;
     notifyListeners();
-    await Future.delayed(Duration(milliseconds: 300));
+
     _bookmark = await _dbhelper.readData();
     _isLoading = false;
     notifyListeners();

@@ -1,4 +1,5 @@
 import 'package:bloge/features/auth/login_srceen/login.dart';
+import 'package:bloge/features/profile/edit_profile.dart';
 import 'package:bloge/models/user_model.dart';
 import 'package:bloge/services/Api_service/get_user.dart';
 import 'package:bloge/services/authservise/AuthService.dart';
@@ -59,7 +60,7 @@ class Profile extends StatelessWidget {
               }
               final user = snapshot.data!.user;
               return Padding(
-                padding: EdgeInsets.all(20.w), // Changed to 20.w
+                padding: EdgeInsets.all(20.w),
                 child: Column(
                   children: [
                     CircleAvatar(
@@ -68,16 +69,13 @@ class Profile extends StatelessWidget {
                       child: Icon(
                         Icons.person,
                         color: Colors.white,
-                        size: 50.sp,
-                      ), // Added .sp
+                        size: 40.sp,
+                      ),
                     ),
                     SizedBox(height: 8.h),
                     Text(
                       user.name,
-                      style: TextStyle(
-                        fontSize: 22.sp,
-                        color: Colors.white,
-                      ), // Added .sp
+                      style: TextStyle(fontSize: 22.sp, color: Colors.white),
                     ),
                     SizedBox(height: 4.h),
                     Text(
@@ -85,7 +83,7 @@ class Profile extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 16.sp,
                         color: Color(0xFF9EA6BA),
-                      ), // Added .sp
+                      ),
                     ),
                     SizedBox(height: 4.h),
                     Text(
@@ -93,7 +91,7 @@ class Profile extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 16.sp,
                         color: Color(0xFF9EA6BA),
-                      ), // Added .sp
+                      ),
                     ),
                     SizedBox(height: 30.h),
                     Row(
@@ -101,16 +99,24 @@ class Profile extends StatelessWidget {
                         Container(
                           decoration: BoxDecoration(
                             color: Color(0xFF292E38),
-                            borderRadius: BorderRadius.circular(
-                              12.r,
-                            ), // Added .r
+                            borderRadius: BorderRadius.circular(12.r),
                           ),
                           child: IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EditProfile(
+                                    name: user.name,
+                                    phone: user.phone,
+                                  ),
+                                ),
+                              );
+                            },
                             icon: Icon(Icons.edit, color: Colors.white),
                           ),
                         ),
-                        SizedBox(width: 6.w), // Added .w
+                        SizedBox(width: 6.w),
                         Text(
                           "Edit Profile",
                           style: TextStyle(
@@ -126,16 +132,14 @@ class Profile extends StatelessWidget {
                         Container(
                           decoration: BoxDecoration(
                             color: Color(0xFF292E38),
-                            borderRadius: BorderRadius.circular(
-                              12.r,
-                            ), // Added .r
+                            borderRadius: BorderRadius.circular(12.r),
                           ),
                           child: IconButton(
                             onPressed: () {},
                             icon: Icon(Icons.lock_outline, color: Colors.white),
                           ),
                         ),
-                        SizedBox(width: 4.w), // Added .w
+                        SizedBox(width: 4.w),
                         Text(
                           "Update Password",
                           style: TextStyle(

@@ -1,7 +1,7 @@
 import 'package:bloge/screens/home/Home.dart';
 
 import 'package:bloge/screens/bookmark.dart';
-import 'package:bloge/screens/profile.dart';
+import 'package:bloge/features/profile/profile.dart';
 import 'package:flutter/material.dart';
 
 class Navigation extends StatefulWidget {

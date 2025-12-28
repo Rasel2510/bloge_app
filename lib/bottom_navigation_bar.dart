@@ -1,7 +1,7 @@
-import 'package:bloge/screens/home/Home.dart';
+import 'package:bloge/features/home/presentation/home_screen.dart';
 
-import 'package:bloge/screens/bookmark.dart';
-import 'package:bloge/features/profile/profile.dart';
+import 'package:bloge/features/bookmark/presentation/bookmark_screen.dart';
+import 'package:bloge/features/profile/presentation/profile_screen.dart';
 import 'package:flutter/material.dart';
 
 class Navigation extends StatefulWidget {
@@ -19,7 +19,7 @@ class _NavigationState extends State<Navigation> {
     });
   }
 
-  final List<Widget> _page = [Home(), BookmarksPage(), Profile()];
+  final List<Widget> _page = const [Home(), BookmarksPage(), Profile()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(

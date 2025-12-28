@@ -1,4 +1,4 @@
-import 'package:bloge/services/Api_service/update_user.dart';
+import 'package:bloge/features/profile/data/post_api_update_profile.dart';
 import 'package:bloge/widgets/elevated_button.dart';
 import 'package:bloge/widgets/textformfild.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +34,7 @@ class _EditProfileState extends State<EditProfile> {
       return;
     }
     try {
-      final result = await UpdateUser().useprofile(newname, newphone);
+      final result = await PostApiUpdateProfile().useprofile(newname, newphone);
       if (result['success'] == true) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:bloge/models/data_model.dart';
+import 'package:bloge/features/bookmark/model/save_bookmark_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';

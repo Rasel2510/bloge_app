@@ -1,6 +1,6 @@
-import 'package:bloge/features/navigation/navigation.dart';
-import 'package:bloge/services/Api_service/api_singup.dart';
-import 'package:bloge/services/authservise/AuthService.dart';
+import 'package:bloge/bottom_navigation_bar.dart';
+import 'package:bloge/features/auth/data/post_api_signin.dart';
+import 'package:bloge/utils/authservise/AuthService.dart';
 import 'package:bloge/widgets/elevated_button.dart';
 import 'package:bloge/widgets/textformfild.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +19,7 @@ class _SingupState extends State<Singup> {
   final TextEditingController phone = TextEditingController();
   final TextEditingController singpassword = TextEditingController();
   final TextEditingController cpassword = TextEditingController();
-  final api = ApiSingup();
+  final api = PostApiSignin();
 
   bool isLoading = false;
 

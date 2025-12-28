@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'package:bloge/services/authservise/AuthService.dart';
+import 'package:bloge/utils/authservise/AuthService.dart';
 import 'package:http/http.dart' as http;
 
-class UpdateUser {
+class PostApiUpdateProfile {
   final String baseurl = "https://api.zhndev.site/wp-json/blog-app/v1";
 
   Future<Map<String, dynamic>> useprofile(String name, String phone) async {

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-class ApiSingup {
+class PostApiSignin {
   final String baseurl = "https://api.zhndev.site/wp-json/blog-app/v1";
 
   final headers = {

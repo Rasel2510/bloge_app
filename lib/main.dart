@@ -1,7 +1,9 @@
-import 'package:bloge/features/auth/login_srceen/login.dart';
-import 'package:bloge/features/navigation/navigation.dart';
-import 'package:bloge/services/authservise/AuthService.dart';
-import 'package:bloge/services/provider/data_provider.dart';
+import 'package:bloge/features/auth/presentation/login_screen.dart';
+import 'package:bloge/bottom_navigation_bar.dart';
+import 'package:bloge/features/bookmark/presentation/bookmark_details_screen.dart';
+import 'package:bloge/features/bookmark/presentation/bookmark_screen.dart';
+import 'package:bloge/utils/authservise/AuthService.dart';
+import 'package:bloge/features/bookmark/data/data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_storage/get_storage.dart';
@@ -27,8 +29,8 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-
-          home: AuthService.isLoggedIn() ? Navigation() : Login(),
+          home: BookmarksPage(),
+          // home: AuthService.isLoggedIn() ? Navigation() : Login(),
         );
       },
     );

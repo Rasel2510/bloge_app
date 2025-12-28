@@ -1,6 +1,6 @@
-import 'package:bloge/models/get_post_model.dart';
-import 'package:bloge/screens/home/details_srceen.dart';
-import 'package:bloge/services/Api_service/api_get.dart';
+import 'package:bloge/features/home/model/get_api_home_screen_model.dart';
+import 'package:bloge/features/home/presentation/details_srceen.dart';
+import 'package:bloge/features/home/data/get_api_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -13,7 +13,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   late Future<PostResponse> postsFuture;
-  final api = ApiGet();
+  final api = GetApiHomeScreen();
 
   @override
   void initState() {

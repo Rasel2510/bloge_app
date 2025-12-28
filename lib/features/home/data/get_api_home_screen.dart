@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:bloge/models/get_post_model.dart';
+import 'package:bloge/features/home/model/get_api_home_screen_model.dart';
 import 'package:http/http.dart' as http;
 
-class ApiGet {
+class GetApiHomeScreen {
   final String baseurl = "https://api.zhndev.site/wp-json/blog-app/v1";
 
   Future<PostResponse> getpost({int page = 1, int perPage = 20}) async {

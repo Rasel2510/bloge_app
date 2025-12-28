@@ -1,9 +1,9 @@
 import 'dart:convert';
-import 'package:bloge/models/user_model.dart';
-import 'package:bloge/services/authservise/AuthService.dart';
+import 'package:bloge/features/profile/model/get_api_user_details_model.dart';
+import 'package:bloge/utils/authservise/AuthService.dart';
 import 'package:http/http.dart' as http;
 
-class ApiProfile {
+class GetAPIuserProfile {
   final String baseurl = "https://api.zhndev.site/wp-json/blog-app/v1";
 
   Future<UserProfileResponse> getuserprofile() async {

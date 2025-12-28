@@ -1,6 +1,6 @@
-import 'package:bloge/models/data_model.dart';
-import 'package:bloge/models/get_post_model.dart';
-import 'package:bloge/services/provider/data_provider.dart';
+import 'package:bloge/features/bookmark/model/save_bookmark_model.dart';
+import 'package:bloge/features/home/model/get_api_home_screen_model.dart';
+import 'package:bloge/features/bookmark/data/data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';

@@ -1,8 +1,8 @@
-import 'package:bloge/features/auth/login_srceen/login.dart';
-import 'package:bloge/features/profile/edit_profile.dart';
-import 'package:bloge/models/user_model.dart';
-import 'package:bloge/services/Api_service/get_user.dart';
-import 'package:bloge/services/authservise/AuthService.dart';
+import 'package:bloge/features/auth/presentation/login_screen.dart';
+import 'package:bloge/features/profile/presentation/edit_profile_screen.dart';
+import 'package:bloge/features/profile/model/get_api_user_details_model.dart';
+import 'package:bloge/features/profile/data/get_api_user_profile.dart';
+import 'package:bloge/utils/authservise/AuthService.dart';
 import 'package:bloge/widgets/elevated_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -37,7 +37,7 @@ class Profile extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: FutureBuilder<UserProfileResponse>(
-            future: ApiProfile().getuserprofile(),
+            future: GetAPIuserProfile().getuserprofile(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());

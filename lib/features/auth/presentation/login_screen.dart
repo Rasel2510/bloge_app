@@ -1,7 +1,7 @@
-import 'package:bloge/features/auth/login_srceen/singup.dart';
-import 'package:bloge/features/navigation/navigation.dart';
-import 'package:bloge/services/Api_service/api_login.dart';
-import 'package:bloge/services/authservise/AuthService.dart';
+import 'package:bloge/features/auth/presentation/singup_screen.dart';
+import 'package:bloge/bottom_navigation_bar.dart';
+import 'package:bloge/features/auth/data/post_api_login.dart';
+import 'package:bloge/utils/authservise/AuthService.dart';
 import 'package:bloge/widgets/elevated_button.dart';
 import 'package:bloge/widgets/textformfild.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +18,7 @@ class _LoginState extends State<Login> {
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
 
-  final api = ApiLogin();
+  final api = PostApiLogin();
   bool isLoading = false;
 
   void handleLogin() async {

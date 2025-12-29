@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class EditProfile extends StatefulWidget {
   final String name;
   final String phone;
+
   const EditProfile({super.key, required this.name, required this.phone});
 
   @override
@@ -27,22 +28,26 @@ class _EditProfileState extends State<EditProfile> {
   Future<void> updatep() async {
     final newname = _name.text.trim();
     final newphone = _phone.text.trim();
+
     if (newname.isEmpty || newphone.isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Enter Your Name and Email")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Enter Your Name and Phone")),
+      );
       return;
     }
+
     try {
       final result = await PostApiUpdateProfile().useprofile(newname, newphone);
+
       if (result['success'] == true) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text("Update successfully"),
             backgroundColor: Colors.green,
           ),
         );
-        Navigator.pop(context);
+
+        Navigator.pop(context, true); 
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -54,26 +59,24 @@ class _EditProfileState extends State<EditProfile> {
     } catch (e) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text("Error:${e.toString()}")));
+      ).showSnackBar(SnackBar(content: Text("Error: ${e.toString()}")));
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF121217),
+      backgroundColor: const Color(0xFF121217),
       appBar: AppBar(
         elevation: 0,
         foregroundColor: Colors.white,
-        backgroundColor: Color(0xFF121217),
+        backgroundColor: const Color(0xFF121217),
         leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(Icons.arrow_back_ios),
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.arrow_back_ios),
         ),
         centerTitle: true,
-        title: Text('Edit Profile'),
+        title: const Text('Edit Profile'),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -85,7 +88,7 @@ class _EditProfileState extends State<EditProfile> {
                 Center(
                   child: CircleAvatar(
                     radius: 70.r,
-                    backgroundColor: Color(0xFFE36527),
+                    backgroundColor: const Color(0xFFE36527),
                     child: Icon(Icons.person, color: Colors.white, size: 40.sp),
                   ),
                 ),
@@ -102,7 +105,7 @@ class _EditProfileState extends State<EditProfile> {
                         widget.phone,
                         style: TextStyle(
                           fontSize: 16.sp,
-                          color: Color(0xFF9EA6BA),
+                          color: const Color(0xFF9EA6BA),
                         ),
                       ),
                     ],
@@ -124,23 +127,21 @@ class _EditProfileState extends State<EditProfile> {
                       style: TextStyle(fontSize: 14.sp, color: Colors.white),
                     ),
                     SizedBox(height: 5.h),
-                    TextForm(controller: _phone, hintText: "Enter your email"),
+                    TextForm(controller: _phone, hintText: "Enter your phone"),
                     Text(
                       'bio',
                       style: TextStyle(fontSize: 14.sp, color: Colors.white),
                     ),
                     SizedBox(height: 5.h),
-                    TextForm(maxline: 3),
+                    const TextForm(maxline: 3),
                   ],
                 ),
                 SizedBox(height: 110.h),
                 CustomElevatedButton(
                   text: 'Save Changes',
-                  onPressed: () {
-                    updatep();
-                  },
+                  onPressed: updatep,
                   fcolor: Colors.white,
-                  bcolor: Color(0xFFE36527),
+                  bcolor: const Color(0xFFE36527),
                 ),
               ],
             ),

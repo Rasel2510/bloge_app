@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class BookmarkDetailsScreen extends StatelessWidget {
+class BookmarkDetailsScreen extends StatefulWidget {
   final dynamic item;
   const BookmarkDetailsScreen({super.key, required this.item});
 
+  @override
+  State<BookmarkDetailsScreen> createState() => _BookmarkDetailsScreenState();
+}
+
+class _BookmarkDetailsScreenState extends State<BookmarkDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,11 +32,11 @@ class BookmarkDetailsScreen extends StatelessWidget {
             SizedBox(height: 16.h),
 
             /// Image
-            item.image != null && item.image.isNotEmpty
+            widget.item.image != null && widget.item.image.isNotEmpty
                 ? ClipRRect(
                     borderRadius: BorderRadius.circular(8.r),
                     child: Image.network(
-                      item.image,
+                      widget.item.image,
                       width: double.infinity,
                       height: 220.h,
                       fit: BoxFit.cover,
@@ -46,7 +51,7 @@ class BookmarkDetailsScreen extends StatelessWidget {
 
             /// Title
             Text(
-              item.title,
+              widget.item.title,
               style: TextStyle(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.bold,
@@ -58,7 +63,7 @@ class BookmarkDetailsScreen extends StatelessWidget {
 
             /// Description
             Text(
-              item.dics,
+              widget.item.dics,
               style: TextStyle(fontSize: 14.sp, color: const Color(0xFF9EA6BA)),
             ),
           ],

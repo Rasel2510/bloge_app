@@ -29,8 +29,8 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          home: BookmarksPage(),
-          // home: AuthService.isLoggedIn() ? Navigation() : Login(),
+
+          home: AuthService.isLoggedIn() ? Navigation() : Login(),
         );
       },
     );

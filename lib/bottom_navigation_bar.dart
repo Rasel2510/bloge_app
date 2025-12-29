@@ -41,7 +41,7 @@ class _NavigationState extends State<Navigation> {
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
         ],
       ),
-      body: _page[_selectedindex],
+      body: IndexedStack(index: _selectedindex, children: _page),
     );
   }
 }

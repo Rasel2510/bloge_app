@@ -39,81 +39,107 @@ class _BookmarksPageState extends State<BookmarksPage> {
             );
           }
           return ListView.builder(
-            physics: BouncingScrollPhysics(
+            physics: const BouncingScrollPhysics(
               parent: AlwaysScrollableScrollPhysics(),
             ),
             padding: EdgeInsets.all(12.w),
             itemCount: provider.bookmark.length,
             itemBuilder: (context, index) {
               final item = provider.bookmark[index];
-              return GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => BookmarkDetailsScreen(item: item),
-                    ),
-                  );
-                },
-                child: Card(
+
+              return Dismissible(
+                key: ValueKey(item.id),
+                direction: DismissDirection.endToStart, 
+                background: Container(
                   margin: EdgeInsets.symmetric(vertical: 8.h),
-                  elevation: 3,
-                  color: Colors.black,
-                  shape: RoundedRectangleBorder(
+                  padding: EdgeInsets.only(right: 20.w),
+                  alignment: Alignment.centerRight,
+                  decoration: BoxDecoration(
+                    color: Colors.red,
                     borderRadius: BorderRadius.circular(12.r),
                   ),
-                  child: Padding(
-                    padding: EdgeInsets.all(12.r),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Image
-                        item.image.isNotEmpty
-                            ? ClipRRect(
-                                borderRadius: BorderRadius.circular(8.r),
-                                child: Image.network(
-                                  item.image,
-                                  width: 130.w,
-                                  height: 130.h,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return _imageFallback();
-                                  },
-                                ),
-                              )
-                            : _imageFallback(),
+                  child: const Icon(
+                    Icons.delete,
+                    color: Colors.white,
+                    size: 30,
+                  ),
+                ),
+                onDismissed: (_) {
+                  Provider.of<BookmarkP>(
+                    context,
+                    listen: false,
+                  ).deletebookmark(item.id);
 
-                        SizedBox(width: 12.w),
-
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                item.title,
-                                style: TextStyle(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Bookmark deleted")),
+                  );
+                },
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => BookmarkDetailsScreen(item: item),
+                      ),
+                    );
+                  },
+                  child: Card(
+                    margin: EdgeInsets.symmetric(vertical: 8.h),
+                    elevation: 3,
+                    color: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(12.r),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          item.image.isNotEmpty
+                              ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(8.r),
+                                  child: Image.network(
+                                    item.image,
+                                    width: 130.w,
+                                    height: 130.h,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (_, __, ___) {
+                                      return _imageFallback();
+                                    },
+                                  ),
+                                )
+                              : _imageFallback(),
+                          SizedBox(width: 12.w),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  item.title,
+                                  style: TextStyle(
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              SizedBox(height: 4.h),
-                              Text(
-                                item.dics,
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  color: Color(0xFF9EA6BA),
+                                SizedBox(height: 4.h),
+                                Text(
+                                  item.dics,
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    color: const Color(0xFF9EA6BA),
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              SizedBox(height: 8.h),
-                            ],
+                                SizedBox(height: 8.h),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),

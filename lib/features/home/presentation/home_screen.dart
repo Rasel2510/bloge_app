@@ -18,7 +18,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    postsFuture = api.getpost(page: 1, perPage: 20);
+    postsFuture = api.getpost(page: 1, perPage: 50);
   }
 
   @override
@@ -75,7 +75,7 @@ class _HomeState extends State<Home> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => DetailsSrceen(post: post),
+                        builder: (context) => DetailsScreen(post: post),
                       ),
                     );
                   },

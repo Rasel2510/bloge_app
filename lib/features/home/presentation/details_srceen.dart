@@ -1,23 +1,70 @@
 import 'package:bloge/features/bookmark/model/save_bookmark_model.dart';
+import 'package:bloge/features/home/data/getapi_comment.dart';
 import 'package:bloge/features/home/model/get_api_home_screen_model.dart';
 import 'package:bloge/features/bookmark/data/data_provider.dart';
+import 'package:bloge/features/home/model/comment_model.dart';
+import 'package:bloge/widgets/textformfild.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-class DetailsSrceen extends StatefulWidget {
+class DetailsScreen extends StatefulWidget {
   final Post post;
-  const DetailsSrceen({super.key, required this.post});
+  const DetailsScreen({super.key, required this.post});
 
   @override
-  State<DetailsSrceen> createState() => _DetailsSrceenState();
+  State<DetailsScreen> createState() => _DetailsScreenState();
 }
 
-class _DetailsSrceenState extends State<DetailsSrceen> {
+class _DetailsScreenState extends State<DetailsScreen> {
+  final TextEditingController _commentController = TextEditingController();
+  late Future<List<Comment>> _commentsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _commentsFuture = _fetchComments();
+  }
+
+  Future<List<Comment>> _fetchComments() async {
+    try {
+      final rawData = await CommentApi().fetchCommentsByPost(widget.post.id);
+      print("Raw comments: $rawData");
+
+      if (rawData is List) {
+        return rawData.map((json) => Comment.fromJson(json)).toList();
+      } else if (rawData is Map && rawData['comments'] != null) {
+        final comments = rawData['comments'] as List;
+        return comments.map((json) => Comment.fromJson(json)).toList();
+      }
+    } catch (e) {
+      print("Error fetching comments: $e");
+    }
+    return [];
+  }
+
+  Future<void> _postComment() async {
+    final commentText = _commentController.text.trim();
+    if (commentText.isEmpty) return;
+
+    try {
+      await CommentApi().addComment(widget.post.id, commentText);
+      _commentController.clear();
+      setState(() {
+        _commentsFuture = _fetchComments(); // Refresh comments
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Failed to post comment: $e")));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final pbookmark = Provider.of<BookmarkP>(context);
     bool isBookmarked = pbookmark.isBookmarked(widget.post.id);
+
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -32,7 +79,7 @@ class _DetailsSrceenState extends State<DetailsSrceen> {
                   id: widget.post.id,
                   image: widget.post.featuredImage ?? '',
                   title: widget.post.title,
-                  dics: widget.post.excerpt,
+                  dics: widget.post.content ?? '',
                 );
                 await pbookmark.togglebookmark(data);
               },
@@ -45,26 +92,26 @@ class _DetailsSrceenState extends State<DetailsSrceen> {
         ),
       ),
       body: SingleChildScrollView(
+        padding: EdgeInsets.only(bottom: 80.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Post image
             if (widget.post.featuredImage != null &&
                 widget.post.featuredImage!.isNotEmpty)
-              ClipRRect(
-                child: Image.network(
-                  widget.post.featuredImage!,
-                  width: double.infinity,
-                  height: 320.h,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      height: 320.h,
-                      width: double.infinity,
-                      color: Colors.grey,
-                      child: Icon(Icons.image, size: 100.w),
-                    );
-                  },
-                ),
+              Image.network(
+                widget.post.featuredImage!,
+                width: double.infinity,
+                height: 320.h,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    height: 320.h,
+                    width: double.infinity,
+                    color: Colors.grey,
+                    child: Icon(Icons.image, size: 100.w),
+                  );
+                },
               )
             else
               Container(
@@ -125,10 +172,9 @@ class _DetailsSrceenState extends State<DetailsSrceen> {
                   ),
                   SizedBox(height: 10.h),
                   Text(
-                    widget.post.content!,
+                    widget.post.content ?? "",
                     style: TextStyle(fontSize: 16.sp, color: Colors.white),
                   ),
-
                   SizedBox(height: 15.h),
                   Row(
                     children: [
@@ -159,10 +205,123 @@ class _DetailsSrceenState extends State<DetailsSrceen> {
                       ),
                     ],
                   ),
+                  SizedBox(height: 20.h),
+                  Text(
+                    "Comments",
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(height: 12.h),
+                  FutureBuilder<List<Comment>>(
+                    future: _commentsFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                      if (snapshot.hasError) {
+                        return Text(
+                          "Error: ${snapshot.error}",
+                          style: TextStyle(color: Colors.white),
+                        );
+                      }
+
+                      final comments = snapshot.data ?? [];
+                      if (comments.isEmpty) {
+                        return const Text(
+                          "No comments yet",
+                          style: TextStyle(color: Colors.white),
+                        );
+                      }
+
+                      return ListView.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: comments.length,
+                        separatorBuilder: (context, index) =>
+                            SizedBox(height: 12.h),
+                        itemBuilder: (context, index) {
+                          final comment = comments[index];
+                          return Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CircleAvatar(
+                                radius: 20.r,
+                                backgroundImage: comment.userImage.isNotEmpty
+                                    ? NetworkImage(comment.userImage)
+                                    : null,
+                                backgroundColor: Colors.grey,
+                                child: comment.userImage.isEmpty
+                                    ? const Icon(
+                                        Icons.person,
+                                        color: Colors.white,
+                                      )
+                                    : null,
+                              ),
+                              SizedBox(width: 12.w),
+                              Expanded(
+                                child: Container(
+                                  padding: EdgeInsets.all(12.r),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFF292E38),
+                                    borderRadius: BorderRadius.circular(12.r),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        comment.userName,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                          fontSize: 14.sp,
+                                        ),
+                                      ),
+                                      SizedBox(height: 4.h),
+                                      Text(
+                                        comment.comment,
+                                        style: TextStyle(
+                                          color: const Color(0xFF9EA6BA),
+                                          fontSize: 14.sp,
+                                        ),
+                                      ),
+                                      SizedBox(height: 4.h),
+                                      Text(
+                                        comment.date,
+                                        style: TextStyle(
+                                          color: const Color(0xFF6B6B6B),
+                                          fontSize: 12.sp,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
           ],
+        ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: TextForm(
+          borderRadius: 30,
+          hintText: "Post a comment...",
+          controller: _commentController,
+          suffixIcon: IconButton(
+            onPressed: _postComment,
+            icon: const Icon(Icons.send, color: Colors.white),
+          ),
         ),
       ),
     );

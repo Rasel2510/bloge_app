@@ -7,20 +7,37 @@ import 'package:bloge/widgets/elevated_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
   const Profile({super.key});
+
+  @override
+  State<Profile> createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
+  late Future<UserProfileResponse> _profileFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProfile();
+  }
+
+  void _loadProfile() {
+    _profileFuture = GetAPIuserProfile().getuserprofile();
+  }
 
   void _logout(BuildContext context) {
     AuthService.logout();
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
+      const SnackBar(
         content: Text("Loged out successfully"),
         backgroundColor: Colors.green,
       ),
     );
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => Login()),
+      MaterialPageRoute(builder: (context) => const Login()),
     );
   }
 
@@ -30,18 +47,19 @@ class Profile extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         foregroundColor: Colors.white,
-        backgroundColor: Color(0xFF121217),
-        title: Text("Profile"),
+        backgroundColor: const Color(0xFF121217),
+        title: const Text("Profile"),
       ),
-      backgroundColor: Color(0xFF121217),
+      backgroundColor: const Color(0xFF121217),
       body: SafeArea(
         child: SingleChildScrollView(
           child: FutureBuilder<UserProfileResponse>(
-            future: GetAPIuserProfile().getuserprofile(),
+            future: _profileFuture,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               }
+
               if (snapshot.hasError) {
                 return Center(
                   child: Text(
@@ -50,6 +68,7 @@ class Profile extends StatelessWidget {
                   ),
                 );
               }
+
               if (!snapshot.hasData || !snapshot.data!.success) {
                 return Center(
                   child: Text(
@@ -58,14 +77,16 @@ class Profile extends StatelessWidget {
                   ),
                 );
               }
+
               final user = snapshot.data!.user;
+
               return Padding(
                 padding: EdgeInsets.all(20.w),
                 child: Column(
                   children: [
                     CircleAvatar(
                       radius: 70.r,
-                      backgroundColor: Color(0xFFE36527),
+                      backgroundColor: const Color(0xFFE36527),
                       child: Icon(
                         Icons.person,
                         color: Colors.white,
@@ -82,7 +103,7 @@ class Profile extends StatelessWidget {
                       user.email,
                       style: TextStyle(
                         fontSize: 16.sp,
-                        color: Color(0xFF9EA6BA),
+                        color: const Color(0xFF9EA6BA),
                       ),
                     ),
                     SizedBox(height: 4.h),
@@ -90,53 +111,63 @@ class Profile extends StatelessWidget {
                       "Software Engineer",
                       style: TextStyle(
                         fontSize: 16.sp,
-                        color: Color(0xFF9EA6BA),
+                        color: const Color(0xFF9EA6BA),
                       ),
                     ),
                     SizedBox(height: 30.h),
-                    Row(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Color(0xFF292E38),
-                            borderRadius: BorderRadius.circular(12.r),
+                    InkWell(
+                      onTap: () async {
+                        final refreshed = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                EditProfile(name: user.name, phone: user.phone),
                           ),
-                          child: IconButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => EditProfile(
-                                    name: user.name,
-                                    phone: user.phone,
-                                  ),
-                                ),
-                              );
-                            },
-                            icon: Icon(Icons.edit, color: Colors.white),
+                        );
+
+                        if (refreshed == true) {
+                          setState(() {
+                            _loadProfile();
+                          });
+                        }
+                      },
+                      child: Row(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF292E38),
+                              borderRadius: BorderRadius.circular(12.r),
+                            ),
+                            child: IconButton(
+                              onPressed: () {},
+                              icon: const Icon(Icons.edit, color: Colors.white),
+                            ),
                           ),
-                        ),
-                        SizedBox(width: 6.w),
-                        Text(
-                          "Edit Profile",
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            color: Colors.white,
+                          SizedBox(width: 6.w),
+                          Text(
+                            "Edit Profile",
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                     SizedBox(height: 15.h),
                     Row(
                       children: [
                         Container(
                           decoration: BoxDecoration(
-                            color: Color(0xFF292E38),
+                            color: const Color(0xFF292E38),
                             borderRadius: BorderRadius.circular(12.r),
                           ),
                           child: IconButton(
                             onPressed: () {},
-                            icon: Icon(Icons.lock_outline, color: Colors.white),
+                            icon: const Icon(
+                              Icons.lock_outline,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                         SizedBox(width: 4.w),
@@ -153,10 +184,8 @@ class Profile extends StatelessWidget {
                     CustomElevatedButton(
                       text: "Log out",
                       fcolor: Colors.white,
-                      onPressed: () {
-                        _logout(context);
-                      },
-                      bcolor: Color(0xFF292E38),
+                      onPressed: () => _logout(context),
+                      bcolor: const Color(0xFF292E38),
                     ),
                   ],
                 ),
